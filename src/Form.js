@@ -122,13 +122,19 @@ const Form = () => {
                 >
                   +
                 </button>
-                <button
-                  type="button"
-                  className="btn btn-outline-danger ms-2"
-                  onClick={removeForm}
-                >
-                  -
-                </button>
+                {index === 0 ? (
+                  <button type="button" className="invisible">
+                    -
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-outline-danger ms-2"
+                    onClick={removeForm}
+                  >
+                    -
+                  </button>
+                )}
               </div>
             </div>
           ))}
