@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const Form = () => {
+  // this will empty the form after
   const [formData, setFormData] = useState([
     {
       inputUserName: "",
@@ -9,28 +10,46 @@ const Form = () => {
       userStatus: 1,
     },
   ]);
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [formCount, setFormCount] = useState(1);
 
+  //this will handle the onChange event for form
   const handleChange = (e, index) => {
     const newFormData = [...formData];
     newFormData[index][e.target.name] = e.target.value;
     setFormData(newFormData);
   };
 
+  //this will add data into the database
   const handleSubmit = (event, index) => {
     event.preventDefault();
     fetch("http://localhost:8000/userinfo", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData[index]),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setFormSubmitted(true);
-      })
-      .catch((error) => console.error("Error:", error));
+    }).then((res) => {
+      setFormSubmitted(true);
+      return res.json;
+    });
   };
+
+  // this will empty form after submit
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (formSubmitted) {
+      setFormData([
+        {
+          inputUserName: "",
+          inputEmail: "",
+          inputPass: "",
+          userStatus: 1,
+        },
+      ]);
+      setFormSubmitted(false);
+    }
+  }, [formSubmitted]);
+
+  //add/remove dom  element for multi inputs
+  const [formCount, setFormCount] = useState(1);
 
   const addForm = () => {
     setFormCount(formCount + 1);
@@ -47,27 +66,14 @@ const Form = () => {
     }
   };
 
-  useEffect(() => {
-    if (formSubmitted) {
-      setFormData([
-        {
-          inputUserName: "",
-          inputEmail: "",
-          inputPass: "",
-          userStatus: 1,
-        },
-      ]);
-      setFormSubmitted(false);
-    }
-  }, [formSubmitted]);
-
   return (
     <>
       <h2 className="fw-bold">User Form</h2>
       <div className="container">
-        <form onSubmit={(e) => handleSubmit(e)}>
-          {formData.map((el, index) => (
-            <div className="row" key={index}>
+        {/* UserForm component */}
+        {formData.map((el, index) => (
+          <form key={index} onSubmit={(e) => handleSubmit(e, index)}>
+            <div className="row">
               <div className="mb-3 col-md-3">
                 <input
                   type="text"
@@ -87,7 +93,7 @@ const Form = () => {
                   id={`inputEmail${index}`}
                   name="inputEmail"
                   required
-                  placeholder="Email"
+                  placeholder="Email "
                   value={el.inputEmail}
                   onChange={(e) => handleChange(e, index)}
                 />
@@ -99,21 +105,16 @@ const Form = () => {
                   id={`inputPass${index}`}
                   name="inputPass"
                   required
-                  placeholder="Password"
+                  placeholder="Password "
                   value={el.inputPass}
                   onChange={(e) => handleChange(e, index)}
                 />
               </div>
               <div className=" col-md-1">
-                <button
-                  type="button"
-                  className="btn btn-outline-success"
-                  onClick={addForm}
-                >
+                <button className="btn btn-outline-success" onClick={addForm}>
                   +
                 </button>
                 <button
-                  type="button"
                   className="btn btn-outline-danger ms-2"
                   onClick={removeForm}
                 >
@@ -121,11 +122,15 @@ const Form = () => {
                 </button>
               </div>
             </div>
-          ))}
-          <button type="submit" className="btn btn-primary btn-lg">
-            Submit
-          </button>
-        </form>
+            <button
+              type="submit"
+              className="btn btn-primary btn-lg"
+              disabled={!el.inputUserName || !el.inputEmail || !el.inputPass}
+            >
+              Submit
+            </button>
+          </form>
+        ))}
       </div>
     </>
   );
