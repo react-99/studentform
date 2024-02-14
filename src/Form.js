@@ -123,9 +123,7 @@ const Form = () => {
                   +
                 </button>
                 {index === 0 ? (
-                  <button type="button" className="invisible">
-                    -
-                  </button>
+                  ""
                 ) : (
                   <button
                     type="button"
