@@ -19,17 +19,21 @@ const Form = () => {
   };
 
   //this will add data to api
-  const handleSubmit = (event, index) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    fetch("http://localhost:8000/userinfo", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData[index]),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setFormSubmitted(true);
-      });
+    formData.forEach((data, index) => {
+      fetch("http://localhost:8000/userinfo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (index === formData.length - 1) {
+            setFormSubmitted(true);
+          }
+        });
+    });
   };
 
   // this will count form
