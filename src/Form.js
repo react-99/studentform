@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const Form = () => {
+  // this is the starting stage of form
   const [formData, setFormData] = useState([
     {
       inputUserName: "",
@@ -9,15 +10,15 @@ const Form = () => {
       userStatus: 1,
     },
   ]);
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [formCount, setFormCount] = useState(1);
 
+  //this will handle value of inputs
   const handleChange = (e, index) => {
     const newFormData = [...formData];
     newFormData[index][e.target.name] = e.target.value;
     setFormData(newFormData);
   };
 
+  //this will add data to api
   const handleSubmit = (event, index) => {
     event.preventDefault();
     fetch("http://localhost:8000/userinfo", {
@@ -28,10 +29,12 @@ const Form = () => {
       .then((res) => res.json())
       .then((data) => {
         setFormSubmitted(true);
-      })
-      .catch((error) => console.error("Error:", error));
+      });
   };
 
+  // this will count form
+  const [formCount, setFormCount] = useState(1);
+  // this will add form
   const addForm = () => {
     setFormCount(formCount + 1);
     setFormData([
@@ -39,13 +42,16 @@ const Form = () => {
       { inputUserName: "", inputEmail: "", inputPass: "", userStatus: 1 },
     ]);
   };
-
+  // this will remove form
   const removeForm = () => {
     if (formCount > 1) {
       setFormCount(formCount - 1);
       setFormData(formData.slice(0, -1));
     }
   };
+
+  // onsubmit this will clear form
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   useEffect(() => {
     if (formSubmitted) {
