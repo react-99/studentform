@@ -29,6 +29,7 @@ const Form = () => {
       })
         .then((res) => res.json())
         .then((data) => {
+          // console.log(data);
           if (index === formData.length - 1) {
             setFormSubmitted(true);
           }
@@ -47,10 +48,13 @@ const Form = () => {
     ]);
   };
   // this will remove form
-  const removeForm = () => {
+  const removeForm = (index) => {
     if (formCount > 1) {
+      const newFormData = [...formData];
+      newFormData.splice(index, 1);
+      console.log(newFormData);
+      setFormData(newFormData);
       setFormCount(formCount - 1);
-      setFormData(formData.slice(0, -1));
     }
   };
 
@@ -128,7 +132,7 @@ const Form = () => {
                   <button
                     type="button"
                     className="btn btn-outline-danger ms-2"
-                    onClick={removeForm}
+                    onClick={() => removeForm(index)}
                   >
                     -
                   </button>

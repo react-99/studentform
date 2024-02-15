@@ -15,7 +15,7 @@ const Data = () => {
       })
       .then((data) => {
         setShowData(data); // data is an array of objects
-        setReRender(!reRender);
+        setReRender(!reRender); //!reRender will true every time
       });
   }, [reRender]);
 
